@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon ./src/main.js",
-    "start": "node ./src/main.js"
+    "start": "node ./src/main.js",
+    "build": "cp -r ./src ./dist"
   },
   "keywords": [],
   "author": "",
