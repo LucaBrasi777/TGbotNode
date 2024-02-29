@@ -2,7 +2,7 @@
   "name": "gpttg",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./src/index.js",
   "type": "module",
   "scripts": {
     "dev": "nodemon ./src/main.js",
@@ -24,6 +24,7 @@
     "axios": "^1.6.7",
     "bunyan": "^1.8.15",
     "bunyan-seq": "^1.0.0",
+    "coinpayments": "^2.2.0",
     "config": "^3.3.10",
     "cron": "^3.1.6",
     "dotenv": "^16.3.2",
