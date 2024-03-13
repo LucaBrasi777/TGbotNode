@@ -1,20 +1,29 @@
-
 import TelegramBot from "node-telegram-bot-api";
 //const testKey = "6469a721bede21a8ed89";
 import stripe from "stripe";
+import axios from "axios";
+// import { config } from "dotenv";
+// config();
+const botToken = '6985342414:AAFxpkOhbpnMLBgpI_j9AX_jrHIuNwQrmug';
+const bot = new TelegramBot(botToken);
+
+const webAppUrl = "https://biznewschannel.com";
+
+const webhookUrl = `https://api.telegram.org/bot${botToken}/setWebhook`;
+const serverUrl = 'https://4v-news-telegram-bot.azurewebsites.net/';
 
 
-//import axios from "axios";
+
+axios.post(webhookUrl, { url: serverUrl })
+  .then(response => {
+    console.log('Вебхук успешно установлен:', response.data);
+  })
+  .catch(error => {
+    console.error('Ошибка при установке вебхука:', error);
+  });
 
 
-const botToken = "6985342414:AAFxpkOhbpnMLBgpI_j9AX_jrHIuNwQrmug";
-//const chatId = "1227459883";
-const webAppUrl = "https://biznewschannel.com/";
-//const webAppUrl2 = "https://biznewschannel.com/good";
-const bot = new TelegramBot(botToken, { polling: true });
-
-
-bot.on("message", async (msg) => {
+  bot.on("message", async (msg) => {
   const chatId = msg.chat.id;
   const text = msg.text;
 
@@ -27,11 +36,13 @@ bot.on("message", async (msg) => {
         reply_markup: {
           keyboard: [
             [
-             
-
               { text: "🌐 Оплата криптой" },
               { text: "📰 Постинг", web_app: { url: webAppUrl } },
             ],
+            [{ text: "💳 Оплатить стандарт" }],
+            [{ text: "🔍 Запрос к API Crypto Pay" }],
+
+            [{ text: "Создать счет", callback_data: "create_invoice" }],
 
             [{ text: "Закрыть" }],
           ],
@@ -41,9 +52,68 @@ bot.on("message", async (msg) => {
   }
 });
 
+// bot.on("callback_query", async (callbackQuery) => {
+//   const chatId = callbackQuery.message.chat.id;
+//   const data = callbackQuery.data;
+
+//   if (data === "pay_standard") {
+//     // Здесь вызывайте функцию или код для оплаты стандартного пакета
+//     // Например, вызов функции payStandard()
+//     await bot.answerCallbackQuery(callbackQuery.id, { text: "Оплата стандартного пакета" });
+//   } else if (data === "api_request") {
+//     // Вызов функции для выполнения запроса к API Crypto Pay
+//     await makeApiRequest(chatId);
+//     await bot.answerCallbackQuery(callbackQuery.id, { text: "Запрос к API Crypto Pay" });
+//   }
+// });
+
+// Функция для выполнения запроса к API Crypto Pay
+
+// async function makeApiRequest(chatId) {
+//   try {
+//     const response = await axios.get("https://fake-api-for-testing.com/getMe", {
+//       headers: {
+//         'Crypto-Pay-API-Token': '158118:AAwsLcGqviK9MwvLOD8TCtwZqllzbeXLXYL',
+//       },
+//     });
+
+//     // Обработка успешного ответа
+//     await bot.sendMessage(chatId, `Ответ от API Crypto Pay: ${JSON.stringify(response.data)}`);
+//   } catch (error) {
+//     console.log(error)
+//     await bot.sendMessage(chatId, `Ошибка при запросе к API Crypto Pay: ${error.message}`);
+//   }
+// }
+
+// async function createInvoice() {
+//   try {
+//     const response = await axios.post("https://fake-api-for-testing.com/createInvoice", {
+//       asset: 'USDT',
+//       amount: '10.00',
+//       currency_type: 'crypto',
+//       description: 'Оплата заказа',
+//     }, {
+//       headers: {
+//         'Crypto-Pay-API-Token': '158118:AAwsLcGqviK9MwvLOD8TCtwZqllzbeXLXYL',
+//         'Content-Type': 'application/json',
+//       },
+//     });
+
+// Обработка успешного ответа
+//     console.log('Создан счет:', response.data);
+//   } catch (error) {
+//     // Обработка ошибок
+//     console.error('Ошибка при создании счета:', error.message);
+//   }
+// }
+
+// // Вызов функции для создания счета
+// createInvoice();
+
 //STRIPE
 
-const STRIPE_SECRET_KEY = "sk_test_51OazU7CEAUiVgq2v9f36loao1miREJDYbgb7nrsoQkm7wyO7irQqNU0j6STMvM8D5oF2HkSralI1SyfcbfNgRJ9X00vvJkSUO1";
+const STRIPE_SECRET_KEY =
+  "sk_test_51OazU7CEAUiVgq2v9f36loao1miREJDYbgb7nrsoQkm7wyO7irQqNU0j6STMvM8D5oF2HkSralI1SyfcbfNgRJ9X00vvJkSUO1";
 const stripeInstance = stripe(STRIPE_SECRET_KEY);
 
 //const payment_token = "5334985814:TEST:551862";
